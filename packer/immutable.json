@@ -35,5 +35,4 @@
           "execute_command": "{{.Path}}"
       }
     ]
-  }
-  
+}
