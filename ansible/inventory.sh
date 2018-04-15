@@ -7,6 +7,7 @@ gcloud_instances_list() {
 invenotry_json() {
     local meta=""
     local hosts=""
+    local group_prefix="reddit-"
 
     gcloud_instances=$(gcloud_instances_list)
 
@@ -14,12 +15,12 @@ invenotry_json() {
     do
         instance=($gcloud_instance)
         name=${instance[0]}
+        group=${name#$group_prefix}
         external_ip=${instance[1]}
         internal_ip=${instance[2]}
 
         printf -v meta '%s, "%s": {"ansible_host": "%s", "internal_ip": "%s"}' "$meta" "${name}-server" "$external_ip" "$internal_ip"
-
-        printf -v hosts '%s, "%s": {"hosts": ["%s"]}' "$hosts" "$name" "${name}-server"
+        printf -v hosts '%s, "%s": {"hosts": ["%s"]}' "$hosts" "$group" "${name}-server"
     done <<< "$gcloud_instances"
 
     printf '{"_meta": {"hostvars": {%s}}, %s}' "${meta:2}" "${hosts:2}"
@@ -27,7 +28,6 @@ invenotry_json() {
 
 case $@ in
     --list) 
-        #cat inventory.json 
         invenotry_json
         ;;
     --host*) 
