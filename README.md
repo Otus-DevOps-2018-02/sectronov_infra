@@ -1,7 +1,7 @@
 # sectronov_infra
 sectronov Infra repository
 
-## Homework 4
+## Homework 4: Командная работа с Git. Работа в GitHub. Продвинутые команды Git
 ```
 bastion_IP = 35.205.140.104
 someinternalhost_IP = 10.132.0.3
@@ -25,7 +25,7 @@ User appuser
 ProxyCommand ssh -W %h:%p bastion
 ```
 
-## Homework 5
+## Homework 5: Локальное окружение инженера. ChatOps и визуализация рабочих процессов
 ```
 testapp_IP = 104.199.39.206
 testapp_port = 9292
@@ -57,7 +57,7 @@ gcloud compute firewall-rules create default-puma-server \
  --target-tags=puma-server
 ```
 
-## Homework 7
+## Homework 7: Основные сервисы Google Cloud Platform (GCP)
 
 В этом ДЗ была проведена работа с [terraform](https://www.terraform.io).
 
@@ -102,3 +102,31 @@ gcloud compute firewall-rules create default-puma-server \
 ### Динамический `inventory`
 
 Для динамического добавления хостов нужно создать скрипт, который будет обрабатывать опции `--list` и `--host <hostname>`. При предаче скрипту опции `--list` он должен вернуть все динамические хосты. При передаче опции `--host <hostname>` — переменные для одного хоста. Если при передаче `--list` в результирующем `JSON` вернулся ключ `_meta` с параметрами хостов, то скрипт не будет вызываться с опицией  `--host`.
+
+## Homework 10: Продолжение знакомства с Ansible: templates, handlers, dynamic inventory, vault, tags.
+
+В директории `ansible/` добавлены:
+- `packer_app.yml` — плейбук с установкой окружения приложения для пакера
+- `packer_db.yml` — плейбук с установкой MongoDB для пакера
+- `reddit_app_one_play.yml` — плейбук в котором задачи вперемешку
+- `reddit_app_multiple_plays.yml` — плейбук в котором задачи сгруппированны по соотвествующим сценариям
+- `app.yml` — один плейбук на один сценарий настройки окружения для приложения
+- `db.yml` — один плейбук на один сценарий настройки MongoDB
+- `deploy.yml` — один плейбук на один сценарий деплоя приложения
+- `site.yml` — плейбу, который объеденяет в себе три предыдущих
+- `templates/db_config.j2` — конфиг для подключения к БД из приложения
+- `templates/mongod.conf.j2` — конфиг для настройки MongoDB
+- `files/puma.service` — конфиг `puma` для `systemd`
+
+Для проверки работспособности плейбуков используется команда:
+
+`ansible-playbook reddit_app_one_play.yml --check --limit
+app --tags app-tag`
+
+- опция `--check` — аргумент для указания того, что будет проверка, а не применение
+- опция `--limit` — аргумент для указания хостов проверки
+- опция `--tags` — аргумент для указания тегов проверки
+
+### Динамический `inventory`
+
+Был улучшен `inventory.sh` для того, чтобы хосты подтягивались автоматически из GCP, теперь `JSON` с хостами генерируется на лету.
