@@ -11,3 +11,13 @@ variable app_disk_image {
   description = "Disk image for reddit app"
   default     = "reddit-base-app"
 }
+
+variable app_tags {
+  description = "Tags for app"
+  default     = ["reddit-app"]
+}
+
+variable machine_type {
+  description = "Machine type for app"
+  default     = "g1-small"
+}
