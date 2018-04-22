@@ -19,7 +19,7 @@
   tags: install
 
 - name: Enable mongod
-  service: 
+  service:
     name: mongod
     enabled: yes
   tags: install
