@@ -1,8 +1,8 @@
 resource "google_compute_instance" "app" {
   name         = "reddit-app"
-  machine_type = "g1-small"
+  machine_type = "${var.machine_type}"
   zone         = "${var.zone}"
-  tags         = ["reddit-app"]
+  tags         = "${var.app_tags}"
 
   boot_disk {
     initialize_params {

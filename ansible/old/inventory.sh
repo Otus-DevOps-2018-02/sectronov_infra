@@ -1,7 +1,9 @@
 #!/bin/bash
 
+gcloud_instances_env_filter="tags.items=${GCLOUD_ENV_TAG:?Please set GCLOUD_ENV_TAG to stage or prod}"
+
 gcloud_instances_list() {
-    gcloud --format="table[no-heading](name, networkInterfaces[0].accessConfigs[0].natIP,networkInterfaces[0].networkIP)" compute instances list
+    gcloud --format="table[no-heading](name, networkInterfaces[0].accessConfigs[0].natIP,networkInterfaces[0].networkIP)" compute instances list -q --filter="${gcloud_instances_env_filter}"
 }
 
 invenotry_json() {
@@ -13,6 +15,8 @@ invenotry_json() {
 
     while read gcloud_instance
     do
+        [[ -z "$gcloud_instance" ]] && continue
+
         instance=($gcloud_instance)
         name=${instance[0]}
         group=${name#$group_prefix}
@@ -23,7 +27,12 @@ invenotry_json() {
         printf -v hosts '%s, "%s": {"hosts": ["%s"]}' "$hosts" "$group" "${name}-server"
     done <<< "$gcloud_instances"
 
-    printf '{"_meta": {"hostvars": {%s}}, %s}' "${meta:2}" "${hosts:2}"
+    if [[ -z "$meta" ]]
+    then
+        echo '{}'
+    else
+        printf '{"_meta": {"hostvars": {%s}}, %s}' "${meta:2}" "${hosts:2}"
+    fi
 }
 
 case $@ in
