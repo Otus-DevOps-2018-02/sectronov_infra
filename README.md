@@ -137,3 +137,19 @@ app --tags app-tag`
 - Из `ansible-galaxy` была использована роль `jdauphant.nginx` для конфигурации `nginx`
 - Был использован `ansible-vault` для шифрования `credentials.yml` в `environments`
 - Доработан динамический `inventory`, для того, чтобы понимать для какого окружения получать инстансы
+
+## Homework 12: Локальная разработка Ansible ролей с Vagrant. Тестирование конфигурации.
+
+- В директории `ansible` добавлен `Vagrantfile`. Команда для запуска: `vagrant up`
+- Доработаны роли `app` и `db`
+- Настроено тестирование ролей с использованием `Molecule`
+- Протестирована роль `db` с помощью `Testinfra`
+
+Команды:
+
+- `molecule init scenario --scenario-name default -r db -d vagrant` - создание
+заготовки тестов для роли db
+- `molecule create` - создание VM для проверки роли
+- `molecule list`- список созданных инстансов, которыми управляет `Molecule`
+- `molecule converge` — применение конфигурации
+- `molecule verify` — прогон тестов

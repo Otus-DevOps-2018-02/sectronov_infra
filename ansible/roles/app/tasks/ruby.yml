@@ -1,0 +1,11 @@
+---
+
+- name: Install ruby packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ruby-full
+    - ruby-bundler
+    - build-essential
+  tags: ruby
